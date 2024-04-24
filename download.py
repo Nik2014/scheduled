@@ -32,7 +32,7 @@ for file in os.listdir('shapefile'):
 
 if db_file:
     # Define the destination path for the DB file
-    destination_path = 'modis.ba.poly.db'
+    destination_path = 'scheduled/modis.ba.poly.db' 
 
     # Copy the DB file to the destination path
     shutil.copy(db_file, destination_path)
