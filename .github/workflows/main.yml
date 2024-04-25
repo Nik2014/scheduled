@@ -1,7 +1,8 @@
 name: Download and Commit GeoJSON file
 
 on:
-  workflow_dispatch:
+  schedule:
+    - cron: '40 20 * * *'  # Run every day at 20:40
   
 jobs:
   download_and_commit:
