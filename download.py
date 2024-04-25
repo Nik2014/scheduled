@@ -48,7 +48,7 @@ shutil.rmtree('shapefile')
 
 
 #Get the data only for Greece
-el_gdf = gdf[gdf['country'] == 'BG']
+el_gdf = gdf[gdf['country'] == 'EL']
 
 # Define the destination path for saving the GeoDataFrame
 destination_path = os.path.join('el_gdf.geojson')
