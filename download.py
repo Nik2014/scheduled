@@ -2,6 +2,9 @@ import requests
 import os
 import zipfile
 import shutil
+import fiona
+import pandas as pd
+import geopandas as gpd
 
 # URL of the shapefile download endpoint
 url = "https://maps.effis.emergency.copernicus.eu/effis?service=WFS&request=getfeature&typename=ms:modis.ba.poly&version=1.1.0&outputformat=SPATIALITEZIP"
@@ -25,22 +28,28 @@ with zipfile.ZipFile('shapefile.zip', 'r') as zip_ref:
 
 # Find the DB file in the extracted folder
 db_file = None
-for file in os.listdir('shapefile'):
+extracted_folder = 'shapefile'
+for file in os.listdir(extracted_folder):
     if file.endswith('.db'):
-        db_file = os.path.join('shapefile', file)
+        db_file = os.path.join(extracted_folder, file)
         break
 
+# Create a GeoDataFrame from the DB file
 if db_file:
-    # Define the destination path for the DB file
-    destination_path = 'scheduled/modis.ba.poly.db' 
-
-    # Copy the DB file to the destination path
-    shutil.copy(db_file, destination_path)
-
-    print("DB file saved as:", destination_path)
+    with fiona.open(db_file) as src:
+        gdf = gpd.GeoDataFrame.from_features(src, crs=src.crs)
+        print("GeoDataFrame created successfully.")
 else:
     print("DB file not found.")
 
 # Clean up the zip file and the extracted folder
 os.remove('shapefile.zip')
 shutil.rmtree('shapefile')
+
+
+#Get the data only for Greece
+el_gdf = gdf[gdf['country'] == 'EL']
+
+# Define the destination path for saving the GeoDataFrame
+destination_path = os.path.join('el_gdf.geojson')
+el_gdf.to_file(destination_path, driver='GeoJSON')
