@@ -1,7 +1,3 @@
 requests
-os
-zipfile
-shutil
-fiona
 pandas
 geopandas
