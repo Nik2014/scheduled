@@ -2,7 +2,7 @@ name: Download and Commit GeoJSON file
 
 on:
   workflow_dispatch:
-
+  
 jobs:
   download_and_commit:
     runs-on: ubuntu-latest
@@ -22,10 +22,15 @@ jobs:
       - name: Run download.py
         run: python download.py
 
+      - name: Check if file has changed
+        id: check_changes
+        run: |
+          git diff --exit-code --quiet || echo "File has changed"
+
       - name: Commit changes
         run: |
           git config --local user.email "nikos.methodios00@gmail.com"
           git config --local user.name pavmeth22
           git add el_gdf.geojson
-          git commit -m "Update el_gdf.geojson"
+          git commit -m "Update el_gdf.geojson" || echo "No changes to commit"
           git push
