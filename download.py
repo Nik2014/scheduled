@@ -2,7 +2,6 @@ import requests
 import os
 import zipfile
 import shutil
-import fiona
 import pandas as pd
 import geopandas as gpd
 
@@ -36,9 +35,9 @@ for file in os.listdir(extracted_folder):
 
 # Create a GeoDataFrame from the DB file
 if db_file:
-    with fiona.open(db_file) as src:
-        gdf = gpd.GeoDataFrame.from_features(src, crs=src.crs)
-        print("GeoDataFrame created successfully.")
+    gdf = gpd.read_file(db_file)
+    print("GeoDataFrame created successfully.")
+    
 else:
     print("DB file not found.")
 
